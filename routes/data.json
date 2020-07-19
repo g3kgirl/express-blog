@@ -1,0 +1,13 @@
+{
+  "posts": [
+    {
+      "title": "Title of your post",
+      "body": "This is your post"
+    },
+    {
+      "title": "Title of your post 2",
+      "body": "This is your post 2"
+    }
+  ],
+  "name": "Shikha Yadav"
+}

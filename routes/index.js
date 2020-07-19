@@ -1,15 +1,15 @@
 var express = require('express');
 var router = express.Router();
+var data = require('./data.json');
+var { posts, name } = data;
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
   res.render('index', {
     title: 'Express',
-    name: 'Shikha',
-    posts: [
-      { title: "Title of your post", body: "This is your post" },
-      { title: "Title of your post 2", body: "This is your post 2" },
-    ]
+    name,
+    posts
   });
 
 });
