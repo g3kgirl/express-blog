@@ -1,0 +1,41 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-align: center;
+}
+
+a {
+  color: #00B7FF;
+}
+
+
+.container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f8f5f5;
+      height: 90vh;
+      width: 100%;
+    }
+
+    .card {
+      width: 50%;
+      height:10vh;
+      background-color:rgb(63, 59, 59);
+      border-radius: 4px;
+      box-shadow: 5px,10px,15px,20px;
+      padding: 50px;
+    }
+
+    button{
+      width: 20%;
+      background-color: white;
+      margin-top: 25px;
+      height: 30px;
+      border-radius: 3px;
+      border-color: transparent;
+      transition: ease all 0.2s;
+      
+      
+    }
+  
