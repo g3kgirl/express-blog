@@ -12,11 +12,7 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
-connection.query('SELECT * FROM posts', function (err, rows, fields) {
-  if (err) throw err
 
-  console.log('The solution is: ', rows)
-})
 
 // connection.end()
 
@@ -24,17 +20,26 @@ connection.query('SELECT * FROM posts', function (err, rows, fields) {
 
 router.get('/', function (req, res, next) {
 
+  connection.query('SELECT * FROM posts ORDER BY created_on DESC;', function (err, rows, fields) {
+    if (err) throw err
+
+    // console.log('The solution is: ', rows, fields)
+    var posts = rows;
+    var filedata = fs.readFileSync('data.json');
+
+    var data = JSON.parse(filedata);
+
+    var { name } = data;
+
+    res.render('index', {
+      title: 'Express',
+      name,
+      posts
+    });
+
+  })
+
   // var data = require('./data.json');
-  var filedata = fs.readFileSync('data.json');
-  var data = JSON.parse(filedata);
-
-  var { posts, name } = data;
-
-  res.render('index', {
-    title: 'Express',
-    name,
-    posts
-  });
 
 });
 
@@ -42,25 +47,32 @@ router.post('/create', function (req, res, next) {
 
   const { title, body } = req.body;
 
+
   const post = { title, body };
+
+  connection.query('INSERT INTO posts SET ?', post, function (err, rows) {
+    console.log(err);
+    res.status(302).redirect('/');
+  })
+
 
   // const oldData = require('./data.json');
 
-  var filedata = fs.readFileSync('data.json');
-  var oldData = JSON.parse(filedata);
+  // var filedata = fs.readFileSync('data.json');
+  // var oldData = JSON.parse(filedata);
 
-  const { posts } = oldData;
+  // const { posts } = oldData;
 
-  const newPosts = [post, ...posts];
+  // const newPosts = [post, ...posts];
 
-  oldData.posts = newPosts;
+  // oldData.posts = newPosts;
 
-  let data = JSON.stringify(oldData, null, 2);
+  // let data = JSON.stringify(oldData, null, 2);
 
-  fs.writeFile('data.json', data, (err, data) => {
-    console.log(err, data);
-    res.status(302).redirect('/');
-  });
+  // fs.writeFile('data.json', data, (err, data) => {
+  //   console.log(err, data);
+  //   res.status(302).redirect('/');
+  // });
 
 
 })
