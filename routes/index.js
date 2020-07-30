@@ -13,6 +13,17 @@ var connection = mysql.createConnection({
 connection.connect()
 
 
+var knex = require('knex')({
+  client: 'mysql',
+  connection: {
+    host: 'localhost',
+    user: 'your_database_user',
+    password: '123456',
+    database: 'blog'
+  }
+});
+
+
 
 // connection.end()
 
