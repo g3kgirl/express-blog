@@ -17,11 +17,14 @@ var knex = require('knex')({
   client: 'mysql',
   connection: {
     host: 'localhost',
-    user: 'your_database_user',
+    user: 'root',
     password: '123456',
     database: 'blog'
   }
 });
+
+
+const Post = knex('posts');
 
 
 
@@ -31,24 +34,29 @@ var knex = require('knex')({
 
 router.get('/', function (req, res, next) {
 
-  connection.query('SELECT * FROM posts ORDER BY created_on DESC;', function (err, rows, fields) {
-    if (err) throw err
+  knex.select()
+    .table('posts')
+    .orderBy('created_on', 'desc')
+    .then(data => {
+      res.render('index', {
+        title: 'Express',
+        name: 'shikha',
+        posts: data
+      });
 
-    // console.log('The solution is: ', rows, fields)
-    var posts = rows;
-    var filedata = fs.readFileSync('data.json');
+    })
 
-    var data = JSON.parse(filedata);
 
-    var { name } = data;
+  // connection.query('SELECT * FROM posts ORDER BY created_on DESC;', function (err, rows, fields) {
+  //   if (err) throw err
 
-    res.render('index', {
-      title: 'Express',
-      name,
-      posts
-    });
+  //   res.render('index', {
+  //     title: 'Express',
+  //     name: 'shikha',
+  //     posts: rows
+  //   });
 
-  })
+  // })
 
   // var data = require('./data.json');
 
@@ -61,10 +69,16 @@ router.post('/create', function (req, res, next) {
 
   const post = { title, body };
 
-  connection.query('INSERT INTO posts SET ?', post, function (err, rows) {
-    console.log(err);
-    res.status(302).redirect('/');
-  })
+  // knex('posts')
+  Post
+    .insert(post)
+    .then(data => {
+      res.status(302).redirect('/');
+    })
+
+  // connection.query('INSERT INTO posts SET ?', post, function (err, rows) {
+  //   console.log(err);
+  // })
 
 
   // const oldData = require('./data.json');
