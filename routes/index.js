@@ -12,6 +12,11 @@ var connection = mysql.createConnection({
 
 connection.connect()
 
+connection.on('error', function (err) {
+  console.error('mysqldb error: ' + err);
+  connectionState = false;
+});
+
 
 var knex = require('knex')({
   client: 'mysql',
