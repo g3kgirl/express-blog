@@ -1,20 +1,29 @@
-var mysql = require('mysql');
 
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '123456',
-  database: 'blog'
+var knex = require('knex')({
+  client: 'pg',
+  connection: 'postgres://root:123456@localhost:5432/blog', //process.env.PG_CONNECTION_STRING,
+  searchPath: ['knex', 'public'],
+});
+
+
+knex.schema.createTable('posts', function (table) {
+  table.increments();
+  table.string('title');
+  table.string('body');
+  table.timestamps(true, true);
 })
+  .then(data => {
+    const post = { title: 'test', body: 'test post' };
 
-connection.connect()
+    knex('posts')
+      .insert(post)
+      .then(data => {
+        console.log(data);
+      })
 
-connection.query(`CREATE TABLE  posts ( id INT auto_increment PRIMARY KEY, created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP, title TEXT, body TEXT );`, function (err, rows) {
-  console.log(err, rows);
-})
+  })
+  .catch(err => {
+    console.log(err);
+  })
 
-connection.query(`INSERT INTO posts (title, body) VALUES ('test title', 'test body of post')`, function (err, rows) {
-  console.log(err, rows);
-})
 
-connection.end()

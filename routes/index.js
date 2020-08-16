@@ -1,47 +1,19 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
-const { json } = require('body-parser');
-var mysql = require('mysql')
-var connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: '123456',
-  database: 'blog'
-})
-
-connection.connect()
-
-connection.on('error', function (err) {
-  console.error('mysqldb error: ' + err);
-  connectionState = false;
-});
-
 
 var knex = require('knex')({
-  client: 'mysql',
-  connection: {
-    host: 'localhost',
-    user: 'root',
-    password: '123456',
-    database: 'blog'
-  }
+  client: 'pg',
+  connection: 'postgres://root:123456@localhost:5432/blog', //process.env.PG_CONNECTION_STRING,
+  searchPath: ['knex', 'public'],
 });
-
 
 const Post = knex('posts');
 
-
-
-// connection.end()
-
 /* GET home page. */
-
 router.get('/', function (req, res, next) {
-
   knex.select()
     .table('posts')
-    .orderBy('created_on', 'desc')
+    .orderBy('created_at', 'desc')
     .then(data => {
       res.render('index', {
         title: 'Express',
@@ -50,61 +22,16 @@ router.get('/', function (req, res, next) {
       });
 
     })
-
-
-  // connection.query('SELECT * FROM posts ORDER BY created_on DESC;', function (err, rows, fields) {
-  //   if (err) throw err
-
-  //   res.render('index', {
-  //     title: 'Express',
-  //     name: 'shikha',
-  //     posts: rows
-  //   });
-
-  // })
-
-  // var data = require('./data.json');
-
 });
 
 router.post('/create', function (req, res, next) {
-
   const { title, body } = req.body;
-
-
   const post = { title, body };
-
-  // knex('posts')
   Post
     .insert(post)
     .then(data => {
       res.status(302).redirect('/');
     })
-
-  // connection.query('INSERT INTO posts SET ?', post, function (err, rows) {
-  //   console.log(err);
-  // })
-
-
-  // const oldData = require('./data.json');
-
-  // var filedata = fs.readFileSync('data.json');
-  // var oldData = JSON.parse(filedata);
-
-  // const { posts } = oldData;
-
-  // const newPosts = [post, ...posts];
-
-  // oldData.posts = newPosts;
-
-  // let data = JSON.stringify(oldData, null, 2);
-
-  // fs.writeFile('data.json', data, (err, data) => {
-  //   console.log(err, data);
-  //   res.status(302).redirect('/');
-  // });
-
-
 })
 
 /* GET login page. */
