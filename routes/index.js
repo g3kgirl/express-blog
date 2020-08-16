@@ -1,9 +1,15 @@
 var express = require('express');
 var router = express.Router();
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
+var pg = require('pg');
+pg.defaults.ssl = true;
+
+
 var knex = require('knex')({
   client: 'pg',
-  connection: 'postgres://root:123456@localhost:5432/blog', //process.env.PG_CONNECTION_STRING,
+  connection: process.env.PG_CONNECTION_STRING,
   searchPath: ['knex', 'public'],
 });
 
